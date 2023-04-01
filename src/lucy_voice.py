@@ -1,17 +1,18 @@
-import hashlib
+import pathlib
+import os
+import sys
+sys.path.append("../config")
+import conf
 
-def is_new(lucy_hash):
-    lucy_text = r'C:\Users\Creator\Desktop\mysister\lucy_voice\lucy_text.txt'
-    f = open(lucy_text, 'rb')
-    filedata = f.read()
-    newhash = hashlib.md5(filedata).hexdigest()
-    if(lucy_hash == newhash):
+def is_new(lucy_timestamp, lucy_voice_text):
+    new_timestamp = os.path.getmtime(lucy_voice_text)
+    if(lucy_timestamp == new_timestamp):
         return False
     else:
         return True
 
 def get_voicetext():
-    lucy_text = 'C:\\Users\\Creator\\Desktop\\mysister\\lucy_voice\\lucy_text.txt'
+    lucy_text = conf.lucy_voice_text
     with open(lucy_text, 'r', encoding='UTF-8') as f:
         datalist = f.readlines()
         return datalist[-1]
