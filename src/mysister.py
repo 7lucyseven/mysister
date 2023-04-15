@@ -5,6 +5,8 @@ import random
 import hashlib
 import sys
 import pathlib
+import copy
+import importlib
 sys.dont_write_bytecode = True
 
 import get_comment
@@ -15,6 +17,7 @@ import lucy_voice
 from distutils.util import strtobool
 sys.path.append("../config")
 import conf
+import dynamic_property
 
 end_time = ''
 ctr_time = 30
@@ -45,42 +48,40 @@ def main():
     while(1):
         tmp_timestamp = os.path.getmtime(dynamic_timestamp_text)
         if(dynamic_timestamp != tmp_timestamp):
-            import dynamic_property
+            dynamic_timestamp = copy.copy(tmp_timestamp)
+            importlib.reload(dynamic_property)
             mode_num = dynamic_property.mode_num
 
         if(mode_num == 1):
             lucy_timestamp = lucy_communication(lucy_timestamp)
-
         elif(mode_num == 2):
             if( get_comment.is_new(l_data, num)):
                 num = comment_communication(num)
-                end_time = time.time()
-            else:
-                time.sleep(1)
-            t = time.time() - end_time
             json = get_comment.init()
             l_data = get_comment.data(json)
-            
-        else:
+        elif(mode_num == 3):
             os.system('cls')
             sister_respons = syster_ai.respons("楽しい話題の雑談を行ってください")
             print("フォルトゥナちゃんからの雑談")
             print(sister_respons)
             save_history("auto", "雑談", sister_respons)
             sister_vocevox.speak('' + ';' + sister_respons)
+        else:
+            exit()
 
 
-
-
+        time.sleep(0.1)
 
 # ルーシーの発言を読み上げる
 def lucy_communication(lucy_timestamp):
     if(lucy_voice.is_new(lucy_timestamp, lucy_voice_text)):
         lucy_text = lucy_voice.get_voicetext()
         os.system('cls')
-        print('るーしー')
+        print('--- るーしー ---')
         print(lucy_text)
+        print(' ')
         sister_respons = syster_ai.respons(lucy_text)
+        print('--- フォルトゥナ ---')
         print(sister_respons)
         save_history("lucy", lucy_text, sister_respons)
         sister_vocevox.speak(' ' + ';' + sister_respons)
@@ -98,12 +99,12 @@ def comment_communication(num):
             comment = data[2][1:]
             print('コメント番号' + str(num) + ' : ', end="")
             print(comment)
-            print('')
+            print(' ')
             sister_respons = syster_ai.respons(comment)
+            print('--- フォルトゥナ ---')
             print(sister_respons)
             save_history("user", comment, sister_respons)
             sister_vocevox.speak(random.choice(l_responses) + comment + ';' + sister_respons )
-            print('-----------------------------------------------')
             num = num + 1
         else:
             #print(num)
