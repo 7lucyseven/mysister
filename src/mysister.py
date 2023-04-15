@@ -17,7 +17,7 @@ sys.path.append("../config")
 import conf
 
 end_time = ''
-ctr_time = 3
+ctr_time = 30
 MAIN_INI_PATH = r"../config/main.ini"
 print(MAIN_INI_PATH)
 lucy_voice_text = conf.lucy_voice_text

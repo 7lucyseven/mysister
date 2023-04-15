@@ -15,5 +15,5 @@ def get_voicetext():
     lucy_text = conf.lucy_voice_text
     with open(lucy_text, 'r', encoding='UTF-8') as f:
         datalist = f.readlines()
-        return datalist[-1]
+        return datalist[0]
     
