@@ -23,34 +23,45 @@ print(MAIN_INI_PATH)
 lucy_voice_text = conf.lucy_voice_text
 CTR_CHAR = conf.CTR_CHAR
 SMALL_TALK = conf.SMALL_TALK
+dynamic_timestamp_text= conf.dynamic_timestamp_text
 # commentを読み上げるときに最初につける相槌
 l_responses = ['ふむふむ。','なになに。','よいしょ。']
 
 # main関数
 def main():
     os.system('cls')
+    print("lucy communication : 1")
+    print("comment communication : 2 or other number")
+    mode_num = int(input("input mode number: "))
     num = int(input("input comment number: "))
     # 発言のタイムスタンプを取得して初期化
     lucy_timestamp = os.path.getmtime(lucy_voice_text)
+    dynamic_timestamp = os.path.getmtime(dynamic_timestamp_text)
 
     # わんコメが集積したcommentをすべて取得
     json = get_comment.init()
     l_data = get_comment.data(json)
-    
-    end_time = time.time()
-    
-    # 読み上げ処理を開始
+
     while(1):
-        if( get_comment.is_new(l_data, num)):
-            #print('--- communication Start---')
-            num = comment_communication(num)
+        tmp_timestamp = os.path.getmtime(dynamic_timestamp_text)
+        if(dynamic_timestamp != tmp_timestamp):
+            import dynamic_property
+            mode_num = dynamic_property.mode_num
+
+        if(mode_num == 1):
             lucy_timestamp = lucy_communication(lucy_timestamp)
-            #print('--- communication End---')
-            end_time = time.time()
+
+        elif(mode_num == 2):
+            if( get_comment.is_new(l_data, num)):
+                num = comment_communication(num)
+                end_time = time.time()
+            else:
+                time.sleep(1)
+            t = time.time() - end_time
+            json = get_comment.init()
+            l_data = get_comment.data(json)
+            
         else:
-            time.sleep(1)
-        t = time.time() - end_time
-        if(t > ctr_time and SMALL_TALK):
             os.system('cls')
             sister_respons = syster_ai.respons("楽しい話題の雑談を行ってください")
             print("フォルトゥナちゃんからの雑談")
@@ -58,9 +69,8 @@ def main():
             save_history("auto", "雑談", sister_respons)
             sister_vocevox.speak('' + ';' + sister_respons)
 
-            end_time = time.time()
-        json = get_comment.init()
-        l_data = get_comment.data(json)
+
+
 
 
 # ルーシーの発言を読み上げる

@@ -7,7 +7,8 @@ CTR_CHAR = '#'
 START_NUM = 1
 # 
 SMALL_TALK = False
-
+#
+dynamic_timestamp_text = '../config/dynamic_property.py'
 
 prompt = {"role": "system", "content": "あなたは私の妹です。あなたの性別、性格、用紙、思考、 \
     ふるまいはすべて私の妹であるようにふるまってください。私は私の姉です。 \
