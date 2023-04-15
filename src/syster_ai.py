@@ -1,6 +1,7 @@
 import openai
 import os
 import sys
+import importlib
 sys.path.append("../config")
 import conf
 
@@ -9,8 +10,9 @@ def respons(user_text):
     openai.api_key = os.environ['OPENAI_API_KEY']
     
     # promptの作成
+    importlib.reload(conf)
     messages=[
-        conf.prompt,
+        conf.prompt_dict[conf.prompt_mode],
         {"role": "user", "content": user_text},
     ] 
 

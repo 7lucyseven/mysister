@@ -1,1 +1,1 @@
-mode_num = 2
+mode_num = 1

@@ -2,11 +2,14 @@ import requests
 import argparse
 import json
 import pyaudio
+import sys
+sys.path.append("../config")
+import conf
 
 def speak(sister_respons):
 
     # サーバのホスト名を指定
-    HOSTNAME='localhost'
+    HOSTNAME='192.168.0.15'
 
     #「;」で文章を区切り１行ずつ音声合成させる
     texts = sister_respons.split(';')
@@ -17,7 +20,7 @@ def speak(sister_respons):
     # 音声合成処理のループ
     for i, text in enumerate(texts):
         # 感情パラメータ個所をスキップ
-        if(i == 1):
+        if(i == 1 and conf.prompt_mode == "prompt_heavy"):
             continue
 
         # 文字列が空の場合は処理しない
