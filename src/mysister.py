@@ -4,6 +4,7 @@ import json
 import random
 import hashlib
 import sys
+import pathlib
 sys.dont_write_bytecode = True
 
 import get_comment
@@ -11,46 +12,56 @@ import syster_ai
 import sister_vocevox
 import lucy_voice
 
-# 文字起こしを行ったルーシーの発言
-lucy_voice_text = 'C:\\Users\\Creator\\Desktop\\mysister\\lucy_voice\\lucy_text.txt'
-# commentを読み上げるときに最初につける相槌
-l_responses = ['ふむふむ。','なになに。','よいしょ。']
-# 読み上げるcommentの制御文字
-CTR_CHAR = '#'
+from distutils.util import strtobool
+sys.path.append("../config")
+import conf
 
 end_time = ''
 ctr_time = 30
+MAIN_INI_PATH = r"../config/main.ini"
+print(MAIN_INI_PATH)
+lucy_voice_text = conf.lucy_voice_text
+CTR_CHAR = conf.CTR_CHAR
+SMALL_TALK = conf.SMALL_TALK
+dynamic_timestamp_text= conf.dynamic_timestamp_text
+# commentを読み上げるときに最初につける相槌
+l_responses = ['ふむふむ。','なになに。','よいしょ。']
 
 # main関数
 def main():
     os.system('cls')
-    # 発言のハッシュ値を取得して初期化
-    lucy_hash = ''
-    with open(lucy_voice_text, 'rb') as f:
-        filedata = f.read()
-        lucy_hash = hashlib.md5(filedata).hexdigest()
+    print("lucy communication : 1")
+    print("comment communication : 2 or other number")
+    mode_num = int(input("input mode number: "))
+    num = int(input("input comment number: "))
+    # 発言のタイムスタンプを取得して初期化
+    lucy_timestamp = os.path.getmtime(lucy_voice_text)
+    dynamic_timestamp = os.path.getmtime(dynamic_timestamp_text)
 
     # わんコメが集積したcommentをすべて取得
     json = get_comment.init()
     l_data = get_comment.data(json)
-    
-    # comment読み上げスタートする番号
-    num = 172
 
-    end_time = time.time()
-    
-    # 読み上げ処理を開始
     while(1):
-        if( get_comment.is_new(l_data, num) ):
-            #print('--- communication Start---')
-            num = comment_communication(num)
-            lucy_hash = lucy_communication(lucy_hash)
-            #print('--- communication End---')
-            end_time = time.time()
+        tmp_timestamp = os.path.getmtime(dynamic_timestamp_text)
+        if(dynamic_timestamp != tmp_timestamp):
+            import dynamic_property
+            mode_num = dynamic_property.mode_num
+
+        if(mode_num == 1):
+            lucy_timestamp = lucy_communication(lucy_timestamp)
+
+        elif(mode_num == 2):
+            if( get_comment.is_new(l_data, num)):
+                num = comment_communication(num)
+                end_time = time.time()
+            else:
+                time.sleep(1)
+            t = time.time() - end_time
+            json = get_comment.init()
+            l_data = get_comment.data(json)
+            
         else:
-            time.sleep(1)
-        t = time.time() - end_time
-        if(t > ctr_time):
             os.system('cls')
             sister_respons = syster_ai.respons("楽しい話題の雑談を行ってください")
             print("フォルトゥナちゃんからの雑談")
@@ -58,14 +69,13 @@ def main():
             save_history("auto", "雑談", sister_respons)
             sister_vocevox.speak('' + ';' + sister_respons)
 
-            end_time = time.time()
-        json = get_comment.init()
-        l_data = get_comment.data(json)
+
+
 
 
 # ルーシーの発言を読み上げる
-def lucy_communication(lucy_hash):
-    if(lucy_voice.is_new(lucy_hash)):
+def lucy_communication(lucy_timestamp):
+    if(lucy_voice.is_new(lucy_timestamp, lucy_voice_text)):
         lucy_text = lucy_voice.get_voicetext()
         os.system('cls')
         print('るーしー')
@@ -73,11 +83,10 @@ def lucy_communication(lucy_hash):
         sister_respons = syster_ai.respons(lucy_text)
         print(sister_respons)
         save_history("lucy", lucy_text, sister_respons)
-        sister_vocevox.speak(random.choice(l_responses) + lucy_text + ';' + sister_respons)
-        with open(lucy_voice_text, 'rb') as f:
-            filedata = f.read()
-            lucy_hash = hashlib.md5(filedata).hexdigest()
-    return lucy_hash
+        sister_vocevox.speak(' ' + ';' + sister_respons)
+        lucy_timestamp = os.path.getmtime(lucy_voice_text)
+
+    return lucy_timestamp
 
 # num番号からcommentを最後まで読み上げる
 def comment_communication(num):
