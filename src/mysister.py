@@ -60,6 +60,12 @@ def main():
             json = get_comment.init()
             l_data = get_comment.data(json)
         elif(mode_num == 3):
+            lucy_timestamp = lucy_communication(lucy_timestamp)
+            if( get_comment.is_new(l_data, num)):
+                num = comment_communication(num)
+            json = get_comment.init()
+            l_data = get_comment.data(json)                
+        elif(mode_num == 4):
             os.system('cls')
             sister_respons = syster_ai.respons("楽しい話題の雑談を行ってください")
             print("フォルトゥナちゃんからの雑談")
