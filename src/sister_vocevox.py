@@ -9,12 +9,13 @@ import conf
 def speak(sister_respons):
 
     # サーバのホスト名を指定
-    HOSTNAME='192.168.0.15'
+    HOSTNAME='192.168.0.91'
 
     #「;」で文章を区切り１行ずつ音声合成させる
     texts = sister_respons.split(';')
     
     # 読み上げキャラのID
+    # speaker = 0
     speaker = 14
 
     # 音声合成処理のループ

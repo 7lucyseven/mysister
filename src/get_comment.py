@@ -8,9 +8,6 @@ def init():
             json_load = json.load(json_open)
             break
         except Exception as e:
-            f = open('json_error.txt', 'a')
-            f.write(e)
-            f.close()
             print(e)
             continue
 

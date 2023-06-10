@@ -88,6 +88,7 @@ def lucy_communication(lucy_timestamp):
         print(' ')
         sister_respons = syster_ai.respons(lucy_text)
         print('--- フォルトゥナ ---')
+        # print('--- お姉ちゃん ---')
         print(sister_respons)
         save_history("lucy", lucy_text, sister_respons)
         sister_vocevox.speak(' ' + ';' + sister_respons)
