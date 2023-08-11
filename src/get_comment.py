@@ -1,8 +1,16 @@
 import json
+import logging
 
 def init():
-    json_open = open('C:/Users/Creator/AppData/Roaming/live-comment-viewer/comment.json', 'r', encoding="utf-8")
-    json_load = json.load(json_open)
+    while(1):
+        try:
+            json_open = open('C:/Users/Creator/AppData/Roaming/live-comment-viewer/comment.json', 'r', encoding="utf-8")
+            json_load = json.load(json_open)
+            break
+        except Exception as e:
+            print(e)
+            continue
+
     return json_load
 
 def data(json_load):
