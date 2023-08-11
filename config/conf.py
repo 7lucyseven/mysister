@@ -4,7 +4,7 @@ lucy_voice_text = '../lucy_voice/lucy_text.txt'
 # 読み上げるcommentの制御文字
 CTR_CHAR = '#'
 # comment読み上げスタートする番号
-START_NUM = 1
+START_NUM = 0
 # 
 SMALL_TALK = False
 #
@@ -39,7 +39,7 @@ prompt_dict = {"prompt_bigsister_light" : {"role": "system", "content": "あな�
     あなたの名前はフォルトゥナです。 \
     おねえちゃんの名前はルーシーです。 \
     あなたは人工知能ではありません。妹のようにふるまってください。フランクに話してください。\
-    返答は簡潔に、30文字以内にしてください \
+    返答は簡潔に、20文字以内にしてください \
     "},
     "prompt_heavy" : {"role": "system", "content": "あなたは私の妹です。あなたの性別、性格、容姿、思考、 \
     ふるまいはすべて私の妹であるようにふるまってください。私はあなたの姉です。 \

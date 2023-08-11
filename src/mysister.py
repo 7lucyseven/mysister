@@ -6,11 +6,12 @@ import hashlib
 import sys
 import pathlib
 import copy
+import time
 import importlib
 sys.dont_write_bytecode = True
 
 import get_comment
-import syster_ai
+import sister_ai
 import sister_vocevox
 import lucy_voice
 
@@ -67,7 +68,7 @@ def main():
             l_data = get_comment.data(json)                
         elif(mode_num == 4):
             os.system('cls')
-            sister_respons = syster_ai.respons("楽しい話題の雑談を行ってください")
+            sister_respons = sister_ai.respons("楽しい話題の雑談を行ってください")
             print("フォルトゥナちゃんからの雑談")
             print(sister_respons)
             save_history("auto", "雑談", sister_respons)
@@ -86,7 +87,7 @@ def lucy_communication(lucy_timestamp):
         print('--- るーしー ---')
         print(lucy_text)
         print(' ')
-        sister_respons = syster_ai.respons(lucy_text)
+        sister_respons = sister_ai.respons(str(int(time.time()*1000)), 'lucy', lucy_text)
         print('--- フォルトゥナ ---')
         # print('--- お姉ちゃん ---')
         print(sister_respons)
@@ -103,11 +104,14 @@ def comment_communication(num):
     for data in l_data[num:]:
         if(data[2][0] == CTR_CHAR):
             os.system('cls')
+            timestamp = data[0]
+            name = data[1]
             comment = data[2][1:]
+            # print(data)
             print('コメント番号' + str(num) + ' : ', end="")
             print(comment)
             print(' ')
-            sister_respons = syster_ai.respons(comment)
+            sister_respons = sister_ai.respons(timestamp, name, comment)
             print('--- フォルトゥナ ---')
             print(sister_respons)
             save_history("user", comment, sister_respons)
