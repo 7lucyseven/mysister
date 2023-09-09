@@ -13,6 +13,8 @@ LOG_FILE = "../log/mysisyte.log"
 LOG_LEVEL = "INFO"
 #
 dynamic_timestamp_text = '../config/dynamic_property.py'
+# commentを読み上げるときに最初につける相槌
+l_responses = ['ふむふむ。','なになに。','よいしょ。']
 
 prompt_mode = "prompt_light"
 

@@ -8,7 +8,7 @@ def init():
             json_load = json.load(json_open)
             break
         except Exception as e:
-            print(e)
+            # print(e)
             continue
 
     return json_load
