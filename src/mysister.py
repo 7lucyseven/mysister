@@ -8,6 +8,9 @@ import pathlib
 import copy
 import time
 import importlib
+import logging
+import logging.handlers
+from logging import getLogger
 sys.dont_write_bytecode = True
 
 import get_comment
@@ -20,6 +23,7 @@ sys.path.append("../config")
 import conf
 import dynamic_property
 
+
 end_time = ''
 ctr_time = 30
 MAIN_INI_PATH = r"../config/main.ini"
@@ -31,31 +35,71 @@ dynamic_timestamp_text= conf.dynamic_timestamp_text
 # commentを読み上げるときに最初につける相槌
 l_responses = ['ふむふむ。','なになに。','よいしょ。']
 
+LOG_FILE = conf.LOG_FILE
+LOG_LEVEL = conf.LOG_LEVEL
+# rh = logging.handlers.RotatingFileHandler(
+#         LOG_FILE, 
+#         encoding='utf-8',
+#         maxBytes=100,
+#         backupCount=10
+#     )
+# logger = logging.getLogger()
+# # logger = logging.basicConfig(
+# #     filename = LOG_FILE,  # ログファイルの名前
+# #     level = logging.INFO,      # ログレベル (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+# #     format='%(asctime)s - %(levelname)s - %(message)s'
+# # )
+# formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+# #ファイルへ出力するハンドラーを定義
+# fh = logging.FileHandler(filename = LOG_FILE, encoding='utf-8')
+# fh.setLevel(logging.INFO)
+# fh.setFormatter(formatter)
+# #rootロガーにハンドラーを登録する
+# logger.addHandler(fh)
+
+
 # main関数
 def main():
+    logger = setup_logger(__name__)
+    logger.info('main function boot!!')
+
     os.system('cls')
+    logger.info('コンソール画面をクリアしました。')
+
     print("lucy communication : 1")
     print("comment communication : 2 or other number")
     mode_num = int(input("input mode number: "))
     num = int(input("input comment number: "))
+    logger.info('モード情報の入力を受け取りました。')
+    logger.info('今回のモードは [' + str(mode_num) + '] です')
+    logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
+
     # 発言のタイムスタンプを取得して初期化
     lucy_timestamp = os.path.getmtime(lucy_voice_text)
+    logger.info('ルーシーの発言テキストのタイムスタンプを取得しました。')
+
     dynamic_timestamp = os.path.getmtime(dynamic_timestamp_text)
+    logger.info('「dynamic_property.py」のタイムスタンプを取得しました。')
 
     # わんコメが集積したcommentをすべて取得
     json = get_comment.init()
     l_data = get_comment.data(json)
+    logger.info('すでにあるコメントをすべて取得しました。')
 
+    logger.info('メインのループ処理に入ります。')
     while(1):
         tmp_timestamp = os.path.getmtime(dynamic_timestamp_text)
         if(dynamic_timestamp != tmp_timestamp):
             dynamic_timestamp = copy.copy(tmp_timestamp)
             importlib.reload(dynamic_property)
             mode_num = dynamic_property.mode_num
+            logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
 
         if(mode_num == 1):
             lucy_timestamp = lucy_communication(lucy_timestamp)
         elif(mode_num == 2):
+            logger.info('モード[2]：コメントとの会話を開始します。')
             if( get_comment.is_new(l_data, num)):
                 num = comment_communication(num)
             json = get_comment.init()
@@ -81,7 +125,9 @@ def main():
 
 # ルーシーの発言を読み上げる
 def lucy_communication(lucy_timestamp):
+    logger = getLogger(__name__)
     if(lucy_voice.is_new(lucy_timestamp, lucy_voice_text)):
+        logger.info('ルーシーテキストのタイムスタンプに変更がありました。ルーシーとの会話を開始します。')
         lucy_text = lucy_voice.get_voicetext()
         os.system('cls')
         print('--- るーしー ---')
@@ -99,6 +145,8 @@ def lucy_communication(lucy_timestamp):
 
 # num番号からcommentを最後まで読み上げる
 def comment_communication(num):
+    logger = getLogger(__name__)
+    logger.info('[' + str(num) + '] 番目のコメントから会話を開始します。')
     json = get_comment.init()
     l_data = get_comment.data(json)
     for data in l_data[num:]:
@@ -149,6 +197,28 @@ def save_history(user, comment, sister_respons):
 
 
         #json.dump(save_data, json_history, indent=4)
+
+def setup_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    # create file handler which logs even DEBUG messages
+    fh = logging.FileHandler(LOG_FILE, encoding='utf-8')
+    fh.setLevel(logging.DEBUG)
+    fh_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s - %(name)s - %(funcName)s - %(message)s')
+    fh.setFormatter(fh_formatter)
+
+    # create console handler with a INFO log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    ch_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', '%Y-%m-%d %H:%M:%S')
+    ch.setFormatter(ch_formatter)
+
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+    return logger
+
 
 if __name__=="__main__":
     main()

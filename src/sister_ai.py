@@ -44,8 +44,18 @@ def respons(timestamp, userID, user_text):
             messages = messages
         )
     except Exception as e:
-        print(e)
-        print(messages)
+        # print(e)
+        # print(messages)
+
+        while True:
+            del messages[1]
+            if(20 > len(messages)):
+                break
+
+        res = openai.ChatCompletion.create(
+            model = "gpt-3.5-turbo",
+            messages = messages
+        )
 
     sister_memory.save_talk("assistant", str(int(time.time()*1000)), 'Fortuna', res["choices"][0]["message"]["content"])
     sister_memory.save_talk("user", str(timestamp), userID, user_text)

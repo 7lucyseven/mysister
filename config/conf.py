@@ -8,9 +8,13 @@ START_NUM = 0
 # 
 SMALL_TALK = False
 #
+LOG_FILE = "../log/mysisyte.log"
+#
+LOG_LEVEL = "INFO"
+#
 dynamic_timestamp_text = '../config/dynamic_property.py'
 
-prompt_mode = "prompt_normal"
+prompt_mode = "prompt_light"
 
 prompt_dict = {"prompt_bigsister_light" : {"role": "system", "content": "あなたは私のお姉ちゃんです。姉妹です。あなたの性別、性格、容姿、思考、 \
     ふるまいはすべて私のお姉ちゃんであるようにふるまってください。 \
