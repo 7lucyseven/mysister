@@ -12,7 +12,7 @@ def is_new(lucy_timestamp, lucy_voice_text):
         return True
 
 def get_voicetext():
-    lucy_text = conf.lucy_voice_text
+    lucy_text = conf.lucy_voice_dir + '/' + conf.lucy_voice_text
     with open(lucy_text, 'r', encoding='UTF-8') as f:
         datalist = f.readlines()
         return datalist[0]

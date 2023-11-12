@@ -1,5 +1,7 @@
 # 文字起こしを行ったルーシーの発言
-lucy_voice_text = '../lucy_voice/lucy_text.txt'
+lucy_voice_dir  = '../lucy_voice'
+lucy_voice_text = 'lucy_text.txt'
+
 
 # 読み上げるcommentの制御文字
 CTR_CHAR = '#'
