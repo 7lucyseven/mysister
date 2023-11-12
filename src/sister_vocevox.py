@@ -9,7 +9,8 @@ import conf
 def speak(sister_respons):
 
     # サーバのホスト名を指定
-    HOSTNAME='192.168.0.91'
+    # HOSTNAME='192.168.0.91'
+    HOSTNAME='127.0.0.1'
 
     #「;」で文章を区切り１行ずつ音声合成させる
     texts = sister_respons.split(';')

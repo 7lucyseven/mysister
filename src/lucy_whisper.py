@@ -30,7 +30,8 @@ while(1):
         transcript = openai.Audio.transcribe("whisper-1", voice_file)
         print(transcript["text"])
 
-        lucy_text = conf.lucy_voice_text
+        lucy_text = conf.lucy_voice_dir + "/" + conf.lucy_voice_text
+        print(lucy_text)
         with open(lucy_text, mode = 'w', encoding='UTF-8') as f:
             f.write(transcript["text"])
 
