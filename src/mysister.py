@@ -46,13 +46,7 @@ def run():
     os.system('cls')
     logger = setup_logger(__name__)
     logger.info('コンソール画面をクリアしました。')
-
-    # print("lucy communication : 1")
-    # print("comment communication : 2 or other number")
-    # mode_num = int(input("input mode number: "))
     num = int(input("input comment number: "))
-    # logger.info('モード情報の入力を受け取りました。')
-    # logger.info('今回のモードは [' + str(mode_num) + '] です')
     logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
 
     # lucy_text.txtを監視するための処理
@@ -65,10 +59,9 @@ def run():
     observer = Observer()
     observer.schedule(event_handler, DIR_WATCH, recursive=True)
     observer.start()
-
     print("監視1開始")
 
-    # lucy_text.txtを監視するための処理
+    # configディレクトリの拡張しpyの設定ファイルを監視するための処理
     DIR_WATCH = '../config'
     PATTERNS = ['*.py']
 
@@ -78,20 +71,7 @@ def run():
     observer_02 = Observer()
     observer_02.schedule(event_handler_02, DIR_WATCH, recursive=True)
     observer_02.start()
-
     print("監視2開始")
-
-
-    # try:
-    #     while True:
-    #         time.sleep(1)
-    # except KeyboardInterrupt:
-    #     observer.stop()
-    # observer.join()
-
-
-    dynamic_timestamp = os.path.getmtime(conf.dynamic_timestamp_text)
-    logger.info('「dynamic_property.py」のタイムスタンプを取得しました。')
 
     importlib.reload(dynamic_property)
     mode_num = dynamic_property.mode_num
@@ -107,13 +87,6 @@ def run():
 
     try:
         while(1):
-            # tmp_timestamp = os.path.getmtime(conf.dynamic_timestamp_text)
-            # if(dynamic_timestamp != tmp_timestamp):
-            #     dynamic_timestamp = copy.copy(tmp_timestamp)
-            #     importlib.reload(dynamic_property)
-            #     mode_num = dynamic_property.mode_num
-            #     logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
-
             if(mode_num == 1):
                 lucy_timestamp = lucy_communication(lucy_timestamp)
             elif(mode_num == 2):
@@ -137,8 +110,6 @@ def run():
                 sister_vocevox.speak('' + ';' + sister_respons)
             else:
                 exit()
-
-
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
