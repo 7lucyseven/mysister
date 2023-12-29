@@ -47,7 +47,7 @@ def speak(sister_respons):
         p = pyaudio.PyAudio()
         
         # 指定のデバイスインデックスを検索
-        for i in range(4,10):
+        for i in range(5,14):
             if('Yamaha SYNCROOM Driver' in p.get_device_info_by_index(i)['name']):
                 output_device_index = i
                 break

@@ -1,0 +1,31 @@
+<html lang="ja">
+<header>
+    <meta charset="utf-8" />
+    <title>Flask Test</title>
+</header>
+
+<body>
+    <h1>Flask Test</h1>
+
+<form action="/result" method="POST">
+    
+    <select name="device">
+        {% set ns = namespace(index = 0) %}
+        {% for device in l_device %}
+        <option value={{ns.index}}>{{ device }}</option>
+        {% set ns.index = ns.index + 1 %}
+        {% endfor %}
+    </select>
+    <select name="mode">
+        <option value=1>ルーシー会話モード</option>
+        <option value=2>コメント欄と会話モード</option>
+        <option value=3>両方モード</option>
+
+    </select>
+
+
+    <p><input type="submit" value="送信"></p>
+</form>
+
+</body>
+</html>
