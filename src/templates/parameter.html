@@ -7,8 +7,9 @@
 <body>
     <h1>Flask Test</h1>
 
-<form action="/result" method="POST">
-    
+<form action="/parameter" method="POST">
+
+    出力デバイスの選択：
     <select name="device">
         {% set ns = namespace(index = 0) %}
         {% for device in l_device %}
@@ -16,6 +17,8 @@
         {% set ns.index = ns.index + 1 %}
         {% endfor %}
     </select>
+    <br />
+    AIのモード選択　　：
     <select name="mode">
         <option value=1>ルーシー会話モード</option>
         <option value=2>コメント欄と会話モード</option>

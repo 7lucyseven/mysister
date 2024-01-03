@@ -42,11 +42,12 @@ def on_modified_02(event):
     logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
     print("test")
 
-def run():
-    os.system('cls')
+def run(mode_num):
+    #os.system('cls')
     logger = setup_logger(__name__)
     logger.info('コンソール画面をクリアしました。')
-    num = int(input("input comment number: "))
+    #num = int(input("input comment number: "))
+    num = 0
     logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
 
     # lucy_text.txtを監視するための処理

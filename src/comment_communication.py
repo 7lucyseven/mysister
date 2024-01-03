@@ -19,7 +19,7 @@ def comment_communication(num):
     for data in l_data[num:]:
         if(data[2][0] == conf.CTR_CHAR):
             logger.info('コメントの先頭に [' + conf.CTR_CHAR + '] を確認しました。')
-            os.system('cls')    
+            #os.system('cls')    
             timestamp = data[0]
             name = data[1]
             comment = data[2][1:]
