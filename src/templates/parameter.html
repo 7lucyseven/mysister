@@ -18,7 +18,7 @@
         {% endfor %}
     </select>
     <br />
-    AIのモード選択　　：
+    AIのモード選択    :
     <select name="mode">
         <option value=1>ルーシー会話モード</option>
         <option value=2>コメント欄と会話モード</option>
@@ -29,6 +29,9 @@
 
     <p><input type="submit" value="送信"></p>
 </form>
-
+<h1>停止ボタン</h1>
+<form action="/stop" method="GET">   
+    <p><input type="submit" value="Stop"></p>
+</form>
 </body>
 </html>

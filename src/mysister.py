@@ -11,7 +11,7 @@ import sister_ai
 import sister_vocevox
 sys.path.append("../config")
 import conf
-import dynamic_property
+#import dynamic_property
 from setup_logger import setup_logger
 from lucy_communication import lucy_communication
 from comment_communication import comment_communication
@@ -20,6 +20,15 @@ import watchdog
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
+
+import configparser
+import queue
+
+class mysister:
+    logger = setup_logger(__name__)
+    config = configparser.ConfigParser()
+    config.read("dynamic_property.ini")
+
 
 # 監視通知のメイン処理
 def on_modified(event):
@@ -37,18 +46,26 @@ def on_modified_02(event):
     print('%s changed' % filename)
 
     # 
-    importlib.reload(dynamic_property)
-    logger = setup_logger(__name__)
-    logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
+    mysister.config.read("dynamic_property.ini")
+
+    status = mysister.config["BASE"]["status"]
+    print('status' + status)
+
+    if(status == "stop"):
+        mysister.logger.info('stop')
+        sys.exit()
+        
+
+    mysister.logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
     print("test")
 
-def run(mode_num):
+def run():
+    #queue01.set(os.getpid())
     #os.system('cls')
-    logger = setup_logger(__name__)
-    logger.info('コンソール画面をクリアしました。')
-    #num = int(input("input comment number: "))
     num = 0
-    logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
+    
+    mysister.logger.info('コンソール画面をクリアしました。')
+    mysister.logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
 
     # lucy_text.txtを監視するための処理
     DIR_WATCH = conf.lucy_voice_dir
@@ -63,8 +80,9 @@ def run(mode_num):
     print("監視1開始")
 
     # configディレクトリの拡張しpyの設定ファイルを監視するための処理
-    DIR_WATCH = '../config'
-    PATTERNS = ['*.py']
+    #DIR_WATCH = '../config'
+    DIR_WATCH = './'
+    PATTERNS = ['*.ini']
 
     event_handler_02 = PatternMatchingEventHandler(PATTERNS)
     event_handler_02.on_modified = on_modified_02
@@ -74,32 +92,38 @@ def run(mode_num):
     observer_02.start()
     print("監視2開始")
 
-    importlib.reload(dynamic_property)
-    mode_num = dynamic_property.mode_num
-    logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
+
+    mode_num = int(mysister.config["BASE"]["mode_num"])
+    mysister.logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
 
     # わんコメが集積したcommentをすべて取得
     json = get_comment.init()
     l_data = get_comment.data(json)
-    logger.info('すでにあるコメントをすべて取得しました。')
+    mysister.logger.info('すでにあるコメントをすべて取得しました。')
 
     
-    logger.info('メインのループ処理に入ります。')
+    mysister.logger.info('メインのループ処理に入ります。')
 
     try:
         while(1):
             if(mode_num == 1):
-                lucy_timestamp = lucy_communication(lucy_timestamp)
+                #print("while(1):")
+                continue
+
             elif(mode_num == 2):
-                logger.info('モード[2]：コメントとの会話を開始します。')
+                #print("while(2):")
+                mysister.logger.info('モード[2]：コメントとの会話を開始します。')
                 if( get_comment.is_new(l_data, num)):
                     num = comment_communication(num)
                 json = get_comment.init()
                 l_data = get_comment.data(json)
             elif(mode_num == 3):
-                lucy_timestamp = lucy_communication(lucy_timestamp)
+                print("while(3):")
+                #if(queue01.get()) == 0:
+                #    sys.exit()
+                lucy_communication()
                 if( get_comment.is_new(l_data, num)):
-                    logger.info('モード[3]：新規コメントがありました。')
+                    mysister.logger.info('モード[3]：新規コメントがありました。')
                     num = comment_communication(num)
                 json = get_comment.init()
                 l_data = get_comment.data(json)                
@@ -110,6 +134,7 @@ def run(mode_num):
                 print(sister_respons)
                 sister_vocevox.speak('' + ';' + sister_respons)
             else:
+                mysister.logger.info('exit ')
                 exit()
             time.sleep(1)
     except KeyboardInterrupt:
