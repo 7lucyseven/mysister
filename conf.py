@@ -1,3 +1,19 @@
+import os
+
+class Config:
+    # セッション管理
+    # 今回は使用しない
+
+    # データベース設定
+    # 今回は使用しない
+
+    # メール設定
+    # 今回は使用しない
+
+    # その他の設定
+    # DEBUG = os.environ.get('DEBUG') in ['True', 'true', '1']
+    # LANGUAGES = ['en', 'ja']
+
 # 文字起こしを行ったルーシーの発言
 lucy_voice_dir  = '../lucy_voice'
 lucy_voice_text = 'lucy_text.txt'
@@ -74,3 +90,16 @@ prompt_dict = {"prompt_bigsister_light" : {"role": "system", "content": "あな�
     恐怖:0〜5 \
     ; \
     "}}
+
+
+class DevelopmentConfig(Config):
+    # 開発設定
+    # DEBUG = True
+
+class TestingConfig(Config):
+    #テスト設定
+    # TESTING = True
+
+class ProductionConfig(Config):
+    # 本番設定
+    # SECRET_KEY = os.environ.get('SECRET_KEY')
