@@ -12,8 +12,6 @@ import queue
 from multiprocessing import Process
 import psutil
 
-app = Flask(__name__)
-
 class main_flask:
     l_device = sound_device.get_device_list()
     thread1 = None
@@ -24,6 +22,8 @@ class main_flask:
 
 #def run(dict_parameter):
 #    mysister.run(dict_parameter["mode"])
+
+app = Blueprint('main', __name__)
 
 @app.route("/")
 def index():
@@ -78,5 +78,3 @@ def stop():
     html = render_template("parameter.html", l_device = main_flask.l_device)
     return html
 
-if __name__ == "__main__":
-    app.run(debug=True)
