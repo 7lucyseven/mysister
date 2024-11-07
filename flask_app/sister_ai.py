@@ -2,9 +2,9 @@ import openai
 import os
 import sys
 import importlib
+from flask_app import sister_memory
 sys.path.append("../config")
 import conf
-import sister_memory
 import time
 
 def respons(timestamp, userID, user_text):

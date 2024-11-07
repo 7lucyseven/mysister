@@ -1,9 +1,9 @@
-import sound_device
+from flask_app import sound_device
 #import main
 import sys
 sys.dont_write_bytecode = True
 #import mysister
-from setup_logger import setup_logger
+from flask_app.setup_logger import setup_logger
 import threading
 sys.path.append("../config")
 import conf
@@ -25,6 +25,4 @@ def service(request):
         parameter_write.config.write(file)
 
     return "test"
-
-
 

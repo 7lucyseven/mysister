@@ -1,7 +1,7 @@
-from setup_logger import setup_logger
-import get_comment
-import sister_vocevox
-import sister_ai
+from flask_app.setup_logger import setup_logger
+from flask_app import get_comment
+from flask_app import sister_vocevox
+from flask_app import sister_ai
 import random
 import sys
 from distutils.util import strtobool

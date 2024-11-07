@@ -2,27 +2,23 @@ import time
 import os
 import sys
 import copy
-import time
+
 import importlib
 sys.dont_write_bytecode = True
 
-import get_comment
-import sister_ai
-import sister_vocevox
+from flask_app import get_comment
+from flask_app import sister_ai
+from flask_app import sister_vocevox
 sys.path.append("../config")
 import conf
-#import dynamic_property
-from setup_logger import setup_logger
-from lucy_communication import lucy_communication
-from comment_communication import comment_communication
+from flask_app.setup_logger import setup_logger
+from flask_app.lucy_communication import lucy_communication 
+from flask_app.comment_communication import comment_communication
 
-import watchdog
 from watchdog.observers.polling import PollingObserver as Observer
-from watchdog.events import LoggingEventHandler
 from watchdog.events import PatternMatchingEventHandler
 
 import configparser
-import queue
 
 class mysister:
     logger = setup_logger(__name__)
@@ -35,8 +31,6 @@ def on_modified(event):
     filepath = event.src_path
     filename = os.path.basename(filepath)
     print('%s changed' % filename)
-
-    # 
     lucy_communication()
 
 # 監視通知のメイン処理
@@ -45,25 +39,18 @@ def on_modified_02(event):
     filename = os.path.basename(filepath)
     print('%s changed' % filename)
 
-    # 
     mysister.config.read("dynamic_property.ini")
-
     status = mysister.config["BASE"]["status"]
     print('status' + status)
 
     if(status == "stop"):
         mysister.logger.info('stop')
         sys.exit()
-        
 
     mysister.logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
-    print("test")
 
 def run():
-    #queue01.set(os.getpid())
-    #os.system('cls')
     num = 0
-    
     mysister.logger.info('コンソール画面をクリアしました。')
     mysister.logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
 
@@ -92,7 +79,6 @@ def run():
     observer_02.start()
     print("監視2開始")
 
-
     mode_num = int(mysister.config["BASE"]["mode_num"])
     mysister.logger.info('設定ファイルのタイムスタンプに変更があったため、新しく設定ファイルを読み込みました。')
 
@@ -100,14 +86,12 @@ def run():
     json = get_comment.init()
     l_data = get_comment.data(json)
     mysister.logger.info('すでにあるコメントをすべて取得しました。')
-
     
     mysister.logger.info('メインのループ処理に入ります。')
 
     try:
         while(1):
             if(mode_num == 1):
-                #print("while(1):")
                 continue
 
             elif(mode_num == 2):
@@ -119,8 +103,6 @@ def run():
                 l_data = get_comment.data(json)
             elif(mode_num == 3):
                 print("while(3):")
-                #if(queue01.get()) == 0:
-                #    sys.exit()
                 lucy_communication()
                 if( get_comment.is_new(l_data, num)):
                     mysister.logger.info('モード[3]：新規コメントがありました。')
@@ -134,7 +116,7 @@ def run():
                 print(sister_respons)
                 sister_vocevox.speak('' + ';' + sister_respons)
             else:
-                mysister.logger.info('exit ')
+                mysister.logger.info('exit')
                 exit()
             time.sleep(1)
     except KeyboardInterrupt:

@@ -1,8 +1,8 @@
 import sys
 import os
 sys.dont_write_bytecode = True
-import mysister
-from setup_logger import setup_logger
+from flask_app import mysister
+from flask_app.setup_logger import setup_logger
 import threading
 import queue
 from multiprocessing import Process, Queue
@@ -10,37 +10,24 @@ from multiprocessing import Process, Queue
 class main:
     logger = setup_logger(__name__)
 
-
-
 def run(queue00):
+    """mysisterプロセスを実行する関数"""
     main.logger.info('mysister run!!')
     queue00.put(os.getpid())
     main.logger.info('mysister run!!')
     mysister.run()
 
-# main関数
 def boot(thread1, queue01):
-    # ログ出力処理
-    # スレッドを作る
-    
-
-    # スレッドの処理を開始
+    """メインプロセスを起動する関数"""
+    # ログ出力
     main.logger.info('thread1 start!!')
 
+    # プロセス間通信用のキュー作成
     queue00 = Queue()
     
-    #thread1 = threading.Thread(target=run, args=(queue01,queue01,),daemon = True)
-    p1 = Process(target=run, args=(queue00, ))
-    #p2 = Process(target=wrapper, args=("test",))
-    print("queue01.get()")
-    #print(queue01.get())
+    # mysisterプロセスの作成と開始
+    p1 = Process(target=run, args=(queue00,))
     p1.start()
-    #p1.start()
-    #print("queue01.get()")
-    #print(queue01.get())
-    
 
+    # プロセスIDを取得して返却
     return int(queue00.get())
-    
-
-    #print("start")

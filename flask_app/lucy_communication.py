@@ -1,9 +1,9 @@
-from setup_logger import setup_logger
-import get_comment
-import sister_vocevox
-import sister_ai
+from flask_app.setup_logger import setup_logger
+from flask_app import get_comment
+from flask_app import sister_vocevox
+from flask_app import sister_ai
 import random
-import lucy_voice
+from flask_app import lucy_voice
 import sys
 from distutils.util import strtobool
 sys.path.append("../config")
@@ -26,4 +26,3 @@ def lucy_communication():
     # print('--- お姉ちゃん ---')
     print(sister_respons)
     sister_vocevox.speak(' ' + ';' + sister_respons)
-
