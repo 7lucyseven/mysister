@@ -41,7 +41,7 @@ def on_modified_02(event):
 
     mysister.config.read("dynamic_property.ini")
     status = mysister.config["BASE"]["status"]
-    print('status' + status)
+    mysister.logger.info('status is ' + status)
 
     if(status == "stop"):
         mysister.logger.info('stop')
@@ -55,10 +55,10 @@ def run():
     mysister.logger.info('今回のコメント読み込み開始地点は [' + str(num) + '] です')
 
     # lucy_text.txtを監視するための処理
-    DIR_WATCH = conf.lucy_voice_dir
+    DIR_WATCH = conf.Config.lucy_voice_dir
     PATTERNS = ['*.txt']
 
-    event_handler = PatternMatchingEventHandler(PATTERNS)
+    event_handler = PatternMatchingEventHandler(patterns=PATTERNS)
     event_handler.on_modified = on_modified
 
     observer = Observer()
@@ -71,7 +71,7 @@ def run():
     DIR_WATCH = './'
     PATTERNS = ['*.ini']
 
-    event_handler_02 = PatternMatchingEventHandler(PATTERNS)
+    event_handler_02 = PatternMatchingEventHandler(patterns=PATTERNS)
     event_handler_02.on_modified = on_modified_02
 
     observer_02 = Observer()

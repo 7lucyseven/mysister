@@ -11,18 +11,22 @@ import conf
 import configparser
 
 class parameter_write:
-    config = configparser.ConfigParser()
-    config.read("dynamic_property.ini")
+    def __init__(self):
+        self.config = configparser.ConfigParser()
+        self.config.read("./flask_app/dynamic_property.ini")
+        self.logger = setup_logger(__name__)
+        self.logger.info("parameter write init")
 
-def service(request):
-    parameter = request.form.to_dict()
+    def service(self, request):
+        parameter = request.form.to_dict()
 
-    parameter_write.config["BASE"]["mode_num"] = parameter["mode"]
-    parameter_write.config["BASE"]["device"]   = parameter["device"]
-    parameter_write.config["BASE"]["status"]   = "start"
+        print(self.config.sections()) 
 
-    with open("dynamic_property.ini", "w") as file:
-        parameter_write.config.write(file)
+        self.config["BASE"]["mode_num"] = parameter["mode"]
+        self.config["BASE"]["device"]   = parameter["device"]
+        self.config["BASE"]["status"]   = "start"
 
-    return "test"
+        with open("dynamic_property.ini", "w") as file:
+            self.config.write(file)
+
 

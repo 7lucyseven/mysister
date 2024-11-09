@@ -33,10 +33,12 @@ def parameter_post():
     logger = setup_logger(__name__)
     
     try:
-        result = parameter_write.service(request)
+        writer = parameter_write.parameter_write()
+        writer.service(request)
         MainFlask.queue01.put(1)
         MainFlask.pid = main.boot(MainFlask.thread1, MainFlask.queue01)
         return render_template("parameter.html", l_device=MainFlask.l_device)
+    
     except Exception as e:
         logger.error(f"エラーが発生しました: {str(e)}")
         return jsonify({"error": str(e)}), 500

@@ -15,7 +15,7 @@ class Config:
     # LANGUAGES = ['en', 'ja']
 
     # 文字起こしを行ったルーシーの発言
-    lucy_voice_dir  = '../lucy_voice'
+    lucy_voice_dir  = './lucy_voice'
     lucy_voice_text = 'lucy_text.txt'
 
     # 読み上げるcommentの制御文字
