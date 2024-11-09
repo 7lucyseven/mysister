@@ -45,10 +45,11 @@ class mysister:
         # モード番号の初期化
         with self._lock:
             self.mode_num = int(self.config["BASE"]["mode_num"])
+            print(self.config["BASE"]["mode_num"])
 
     def _read_config_with_lock(self):
         """設定ファイルを排他的にロックして読み込む"""
-        with open("dynamic_property.ini", "r") as f:
+        with open("./flask_app/dynamic_property.ini", "r") as f:
             fcntl.flock(f.fileno(), fcntl.LOCK_EX)
             try:
                 self.config.read_file(f)
@@ -57,7 +58,7 @@ class mysister:
 
     def _write_config_with_lock(self):
         """設定ファイルを排他的にロックして書き込む"""
-        with open("dynamic_property.ini", "w") as f:
+        with open("./flask_app/dynamic_property.ini", "w") as f:
             fcntl.flock(f.fileno(), fcntl.LOCK_EX)
             try:
                 self.config.write(f)
@@ -116,6 +117,7 @@ class mysister:
         self.logger.info('メインのループ処理に入ります。')
 
         try:
+            print(self.mode_num)
             while True:
                 with self._lock:
                     if self.mode_num == 1:

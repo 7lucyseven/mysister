@@ -8,7 +8,7 @@ import conf
 # 引数は2つ。AI or user と 会話text。
 def save_talk(role , timestamp, userID, talk_text):
 
-    file_path = '../tmp/' + role + '_' +userID + '.txt'
+    file_path = './tmp/' + role + '_' +userID + '.txt'
     with open(file_path, 'a', encoding='utf-8') as f:
         f.write('\n' + timestamp + ';' + talk_text.replace('\n', ''))
 

@@ -22,7 +22,7 @@ def speak(sister_respons):
     # 音声合成処理のループ
     for i, text in enumerate(texts):
         # 感情パラメータ個所をスキップ
-        if(i == 1 and conf.prompt_mode == "prompt_heavy"):
+        if(i == 1 and conf.Config.prompt_mode == "prompt_heavy"):
             continue
 
         # 文字列が空の場合は処理しない
@@ -48,7 +48,8 @@ def speak(sister_respons):
         
         # 指定のデバイスインデックスを検索
         for i in range(5,14):
-            if('Yamaha SYNCROOM Driver' in p.get_device_info_by_index(i)['name']):
+            if('VB' in p.get_device_info_by_index(i)['name']):
+            #if('Yamaha SYNCROOM Driver' in p.get_device_info_by_index(i)['name']):
             #if('Open' in p.get_device_info_by_index(i)['name']):
                 output_device_index = i
                 break
@@ -61,6 +62,7 @@ def speak(sister_respons):
                     output_device_index = output_device_index)
         
         # WAV データを直接再生する
+        #stream.write(data[46:])
         stream.write(data[46:])
         
         # ストリームを閉じる

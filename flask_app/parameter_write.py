@@ -26,7 +26,7 @@ class parameter_write:
         self.config["BASE"]["device"]   = parameter["device"]
         self.config["BASE"]["status"]   = "start"
 
-        with open("dynamic_property.ini", "w") as file:
+        with open("./flask_app/dynamic_property.ini", "w") as file:
             self.config.write(file)
 
 

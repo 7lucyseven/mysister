@@ -17,7 +17,7 @@ class MainFlask:
     l_device = sound_device.get_device_list()
     thread1 = None
     config = configparser.ConfigParser()
-    config.read("dynamic_property.ini")
+    config.read("./flask_app/dynamic_property.ini")
     queue01 = queue.Queue()
     pid = -1
 
