@@ -1,47 +1,43 @@
 import time
 import os
 import sys
-import copy
 import threading
 import fcntl
-
-import importlib
-sys.dont_write_bytecode = True
-
-from flask_app import get_comment
-from flask_app import sister_ai
-from flask_app import sister_vocevox
-sys.path.append("../config")
 import conf
-from flask_app.setup_logger import setup_logger
-from flask_app.lucy_communication import lucy_communication 
-from flask_app.comment_communication import comment_communication
+import configparser
 
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import PatternMatchingEventHandler
 
-import configparser
+from flask_app import get_comment
+from flask_app import sister_ai
+from flask_app import sister_vocevox
 
-class mysister:
+from flask_app.setup_logger import setup_logger
+from flask_app.lucy_communication import lucy_communication
+from flask_app.comment_communication import comment_communication
+
+class Mysister:
     def __init__(self):
         # ロガーの初期化
         self.logger = setup_logger(__name__)
-        
+        self.logger.info("Mysister initialized.")
+
         # 設定ファイルの初期化
         self.config = configparser.ConfigParser()
         self._read_config_with_lock()
-        
+
         # スレッドセーフのためのロック
         self._lock = threading.Lock()
         self._config_lock = threading.Lock()
-        
+
         # コメント番号の初期化
         self.num = 0
         
         # 監視オブジェクトの初期化
         self.observer = None  # lucy_text.txt監視用
         self.observer_02 = None  # 設定ファイル監視用
-        
+
         # モード番号の初期化
         with self._lock:
             self.mode_num = int(self.config["BASE"]["mode_num"])
@@ -102,7 +98,7 @@ class mysister:
         self._setup_lucy_observer()
         self.logger.info('lucy_text.txtの監視開始')
 
-        # 設定ファイルの監視設定  
+        # 設定ファイルの監視設定
         self._setup_config_observer()
         self.logger.info('設定ファイルの監視開始')
 
@@ -127,7 +123,7 @@ class mysister:
                         json = get_comment.init()
                         l_data = get_comment.data(json)
                     elif self.mode_num == 3:
-                        self._handle_mode3(l_data) 
+                        self._handle_mode3(l_data)
                         json = get_comment.init()
                         l_data = get_comment.data(json)
                     elif self.mode_num == 4:
@@ -164,8 +160,8 @@ class mysister:
 
     def _handle_mode2(self, l_data):
         """モード2の処理"""
-        self.logger.info('モード[2]：コメントとの会話を開始します。')
         if get_comment.is_new(l_data, self.num):
+            self.logger.info('モード[2]：コメントとの会話を開始します。')
             self.num = comment_communication(self.num)
 
     def _handle_mode3(self, l_data):

@@ -1,7 +1,7 @@
 import sys
 import os
 sys.dont_write_bytecode = True
-from flask_app.mysister import mysister
+from flask_app.mysister import Mysister
 from flask_app.setup_logger import setup_logger
 import threading
 import queue
@@ -15,7 +15,7 @@ def run(queue00):
     main.logger.info('mysister run!!')
     queue00.put(os.getpid())
     main.logger.info('mysister run!!')
-    sister = mysister()
+    sister = Mysister()
     sister.run()
 
 def boot(thread1, queue01):

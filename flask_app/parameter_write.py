@@ -2,7 +2,6 @@ from flask_app import sound_device
 #import main
 import sys
 sys.dont_write_bytecode = True
-#import mysister
 from flask_app.setup_logger import setup_logger
 import threading
 sys.path.append("../config")
