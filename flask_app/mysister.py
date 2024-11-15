@@ -19,6 +19,8 @@ from flask_app.comment_communication import comment_communication
 
 class Mysister:
     def __init__(self):
+        """インスタンス作成時の初期化処理"""
+
         # ロガーの初期化
         self.logger = setup_logger(__name__)
         self.logger.info("Mysister initialized.")
@@ -41,7 +43,7 @@ class Mysister:
         # モード番号の初期化
         with self._lock:
             self.mode_num = int(self.config["BASE"]["mode_num"])
-            print(self.config["BASE"]["mode_num"])
+            self.logger.info(self.config["BASE"]["mode_num"])
 
     def _read_config_with_lock(self):
         """設定ファイルを排他的にロックして読み込む"""
@@ -113,10 +115,10 @@ class Mysister:
         self.logger.info('メインのループ処理に入ります。')
 
         try:
-            print(self.mode_num)
             while True:
                 with self._lock:
                     if self.mode_num == 1:
+                        time.sleep(1)
                         continue
                     elif self.mode_num == 2:
                         self._handle_mode2(l_data)
@@ -131,7 +133,7 @@ class Mysister:
                     else:
                         self.logger.info('exit')
                         exit()
-                time.sleep(1)
+                    time.sleep(1)
 
         except KeyboardInterrupt:
             self.observer.stop()
