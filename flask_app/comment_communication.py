@@ -1,7 +1,7 @@
-from setup_logger import setup_logger
-import get_comment
-import sister_vocevox
-import sister_ai
+from flask_app.setup_logger import setup_logger
+from flask_app import get_comment
+from flask_app import sister_vocevox
+from flask_app import sister_ai
 import random
 import sys
 from distutils.util import strtobool
@@ -17,8 +17,8 @@ def comment_communication(num):
     l_data = get_comment.data(json)
     logger.info('コメントファイルを読み込みました。')
     for data in l_data[num:]:
-        if(data[2][0] == conf.CTR_CHAR):
-            logger.info('コメントの先頭に [' + conf.CTR_CHAR + '] を確認しました。')
+        if(data[2][0] == conf.Config.CTR_CHAR):
+            logger.info('コメントの先頭に [' + conf.Config.CTR_CHAR + '] を確認しました。')
             #os.system('cls')    
             timestamp = data[0]
             name = data[1]
@@ -31,7 +31,7 @@ def comment_communication(num):
             sister_respons = sister_ai.respons(timestamp, name, comment)
             print('--- フォルトゥナ ---')
             print(sister_respons)
-            sister_vocevox.speak(random.choice(conf.l_responses) + comment + ';' + sister_respons )
+            sister_vocevox.speak(random.choice(conf.Config.l_responses) + comment + ';' + sister_respons )
             num = num + 1
         else:
             num = num + 1

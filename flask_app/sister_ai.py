@@ -2,9 +2,9 @@ import openai
 import os
 import sys
 import importlib
+from flask_app import sister_memory
 sys.path.append("../config")
 import conf
-import sister_memory
 import time
 
 def respons(timestamp, userID, user_text):
@@ -14,7 +14,7 @@ def respons(timestamp, userID, user_text):
     # promptの作成
     importlib.reload(conf)
     messages=[
-        conf.prompt_dict[conf.prompt_mode]
+        conf.Config.prompt_dict[conf.Config.prompt_mode]
     ] 
     
     l_user_text      = []
