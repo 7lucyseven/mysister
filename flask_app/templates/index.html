@@ -1,13 +1,24 @@
 <html lang="ja">
 <header>
     <meta charset="utf-8" />
-    <title>Flask Test</title>
+    <title>Flask 初期画面</title>
 </header>
 
 <body>
-    <h1>Flask Test</h1>
-    <form action="/parameter" method="GET">   
+    <h1>Flask 初期画面</h1>
+
+    <h1>開始ボタン</h1>
+    <form action="/start" method="GET">   
         <p><input type="submit" value="Start"></p>
+    </form>
+
+    <h1>停止ボタン</h1>
+    <form action="/stop" method="GET">   
+        <p><input type="submit" value="Stop"></p>
+    </form>
+
+    <form action="/parameter" method="GET">   
+        <p><input type="submit" value="Parameter Setting"></p>
     </form>
 </body>
 </html>
