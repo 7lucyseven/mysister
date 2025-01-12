@@ -69,11 +69,17 @@ class Mysister:
 
     def _write_config_with_lock(self):
         """設定ファイルを排他的にロックして書き込む"""
-        with open("./flask_app/dynamic_property.ini", "w") as f:
+        # どこからも呼ばれていないので、あとで修正を行う
+        # 修正内容は書き込み処理を追記処理に変更する
+        # 追記する場合はseekで先頭行から
+        # 追記する内容はconfigpareserを使用する
+        with open("./flask_app/dynamic_property.ini", "a") as f:
             if platform.system() != 'Windows':
                 fcntl.flock(f.fileno(), fcntl.LOCK_EX)
                 try:
                     self.config.write(f)
+                    f.write('\n')
+                    f.flush()
                 finally:
                     fcntl.flock(f.fileno(), fcntl.LOCK_UN)
             else:
