@@ -2,9 +2,15 @@ import time
 import os
 import sys
 import threading
-import fcntl
-import conf
+import platform
 import configparser
+import conf
+
+if platform.system() != 'Windows':
+    import fcntl
+else:
+    import msvcrt
+    import portalocker
 
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import PatternMatchingEventHandler
@@ -48,20 +54,34 @@ class Mysister:
     def _read_config_with_lock(self):
         """設定ファイルを排他的にロックして読み込む"""
         with open("./flask_app/dynamic_property.ini", "r") as f:
-            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-            try:
-                self.config.read_file(f)
-            finally:
-                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            if platform.system() != 'Windows':
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                try:
+                    self.config.read_file(f)
+                finally:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            else:
+                portalocker.lock(f, portalocker.LOCK_EX)
+                try:
+                    self.config.read_file(f)
+                finally:
+                    portalocker.unlock(f)
 
     def _write_config_with_lock(self):
         """設定ファイルを排他的にロックして書き込む"""
         with open("./flask_app/dynamic_property.ini", "w") as f:
-            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-            try:
-                self.config.write(f)
-            finally:
-                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            if platform.system() != 'Windows':
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                try:
+                    self.config.write(f)
+                finally:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            else:
+                portalocker.lock(f, portalocker.LOCK_EX)
+                try:
+                    self.config.write(f)
+                finally:
+                    portalocker.unlock(f)
 
     def on_modified(self, event):
         """lucy_text.txtの監視処理"""

@@ -48,8 +48,8 @@ def speak(sister_respons):
         
         # 指定のデバイスインデックスを検索
         for i in range(5,14):
-            if('VB' in p.get_device_info_by_index(i)['name']):
-            #if('Yamaha SYNCROOM Driver' in p.get_device_info_by_index(i)['name']):
+            #if('VB' in p.get_device_info_by_index(i)['name']):
+            if('Yamaha SYNCROOM Driver' in p.get_device_info_by_index(i)['name']):
             #if('Open' in p.get_device_info_by_index(i)['name']):
                 output_device_index = i
                 break
