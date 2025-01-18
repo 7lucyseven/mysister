@@ -1,13 +1,10 @@
 from flask import Flask, render_template, request, jsonify, Blueprint
 from flask_app import sound_device
-from flask_app import main
 from flask_app import parameter_write
 from flask_app.setup_logger import setup_logger
 import sys
 sys.path.append("../")
 sys.dont_write_bytecode = True
-import mysister
-import threading
 import configparser
 import queue
 from multiprocessing import Process
@@ -49,15 +46,18 @@ def start_get():
         logger.error(f"エラーが発生しました: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@app.route("/parameter", methods=["POST"])
-def parameter_post():
+@app.route("/parameter/save", methods=["POST"])
+def parameter_save():
     try:
+        # パラメータを設定ファイルに保存
+        # インスタンス作成
         writer = parameter_write.parameter_write()
+        # サービス実施
         writer.service(request)
-        return render_template("parameter.html", l_device=main_flask.l_device)
+        return render_template("index.html")
     
     except Exception as e:
-        logger.error(f"エラーが発生しました: {str(e)}")
+        logger.error(f"パラメーター保存処理でエラーが発生しました: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route("/parameter", methods=["GET"]) 

@@ -7,7 +7,7 @@
 <body>
     <h1>Flask Test</h1>
 
-<form action="/parameter" method="POST">
+<form action="/parameter/save" method="POST">
     出力デバイスの選択：
     <select name="device">
         {% set ns = namespace(index = 0) %}
@@ -23,13 +23,9 @@
             <option value=2>コメント欄と会話モード</option>
             <option value=3>両方モード</option>
         </select>
-        <p><input type="submit" value="送信"></p>
+        <p><input type="submit" value="パラメータを保存"></p>
 </form>
 
-<h1>停止ボタン</h1>
-<form action="/stop" method="GET">   
-    <p><input type="submit" value="Stop"></p>
-</form>
 
 </body>
 </html>

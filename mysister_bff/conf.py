@@ -25,7 +25,7 @@ class Config:
     # 
     SMALL_TALK = False
     #
-    LOG_FILE = "../mysister/log/mysisyter.log"
+    LOG_FILE = "../mysister_bff/log/mysisyter.log"
     #
     LOG_LEVEL = "INFO"
     #
